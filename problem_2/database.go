@@ -1,19 +1,22 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Database struct {
 	students []Student
 }
 
-func (database *Database) NewDatabase() {
+func (database *Database) Database() {
 }
 
-func (database *Database) add_student(name string, id string) Student {
+func (database *Database) add_student(name string, id string) *Student {
 	student := Student{}
 	student.NewStudent(name, id)
 	database.students = append(database.students, student)
-	return student
+	fmt.Println(database.students[len(database.students)-1])
+	return &database.students[len(database.students)-1]
 }
 
 func (database *Database) find_student_by_id(id string) Student {
@@ -50,4 +53,8 @@ func (database *Database) find_students_by_course(course_name string) []Student 
 		}
 	}
 	return searched_students
+}
+
+func (database *Database) num_student() uint {
+	return uint(len(database.students))
 }

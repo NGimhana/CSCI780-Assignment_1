@@ -6,6 +6,15 @@ type Course struct {
 	grade       float32
 }
 
+func (student *Student) add_course(course_name string, credit_hours uint, grade float32) {
+	course := Course{
+		courseName:  course_name,
+		creditHours: credit_hours,
+		grade:       grade,
+	}
+	student.courses = append(student.courses, course)
+}
+
 type Student struct {
 	name    string
 	id      string
@@ -14,21 +23,13 @@ type Student struct {
 	courses []Course
 }
 
-func (student *Student) NewStudent(name string, id string) {
+func (student *Student) NewStudent(name string, id string) *Student {
 	student.name = name
 	student.id = id
 	student.major = ""
 	student.age = 0
 	student.courses = []Course{}
-}
-
-func (student *Student) add_course(course_name string, credit_hours uint, grade float32) {
-	course := Course{
-		courseName:  course_name,
-		creditHours: credit_hours,
-		grade:       grade,
-	}
-	student.courses = append(student.courses, course)
+	return student
 }
 
 func (student Student) calculate_gpa() float32 {
