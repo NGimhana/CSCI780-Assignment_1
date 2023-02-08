@@ -1,21 +1,24 @@
 package main
 
 import (
-	"fmt"
+	"sort"
 )
 
 type Database struct {
-	students []Student
+	students         []Student
+	index_to_student map[int]Student
 }
 
 func (database *Database) Database() {
+	database.index_to_student = make(map[int]Student)
 }
 
 func (database *Database) add_student(name string, id string) *Student {
 	student := Student{}
 	student.NewStudent(name, id)
+	index := database.num_student()
+	database.index_to_student[int(index)+1] = student
 	database.students = append(database.students, student)
-	fmt.Println(database.students[len(database.students)-1])
 	return &database.students[len(database.students)-1]
 }
 
@@ -43,15 +46,25 @@ func (database *Database) find_student_by_name(name string) Student {
 
 func (database *Database) find_students_by_course(course_name string) []Student {
 	var searched_students []Student = nil
-	for _, student := range database.students {
+	keys := make([]int, 0, len(database.index_to_student))
+
+	for k := range database.index_to_student {
+		keys = append(keys, k)
+	}
+	// this will give the student items in the same order they were added
+	sort.Ints(keys)
+
+	// iterate by sorted keys
+	for _, index := range keys {
+		student := database.find_student_by_id(database.index_to_student[index].id)
 		for _, course := range student.courses {
 			if course.courseName == course_name {
 				searched_students = append(searched_students, student)
-				fmt.Println(searched_students)
 				break
 			}
 		}
 	}
+
 	return searched_students
 }
 
