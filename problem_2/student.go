@@ -6,20 +6,21 @@ type Course struct {
 	grade       float32
 }
 
-func (student *Student) add_course(course_name string, credit_hours uint, grade float32) {
+func (student *Student) add_course(course_name string, credit_hours uint, grade float32) *Student {
 	course := Course{
 		courseName:  course_name,
 		creditHours: credit_hours,
 		grade:       grade,
 	}
 	student.courses = append(student.courses, course)
+	return student
 }
 
 type Student struct {
 	name    string
 	id      string
 	major   string
-	age     int
+	age     uint
 	courses []Course
 }
 
@@ -28,6 +29,15 @@ func (student *Student) NewStudent(name string, id string) *Student {
 	student.id = id
 	student.major = ""
 	student.age = 0
+	student.courses = []Course{}
+	return student
+}
+
+func (student *Student) NewStudent_with_all_params(name string, id string, major string, age uint) *Student {
+	student.name = name
+	student.id = id
+	student.major = major
+	student.age = age
 	student.courses = []Course{}
 	return student
 }
