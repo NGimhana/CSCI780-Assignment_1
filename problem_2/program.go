@@ -41,7 +41,7 @@ func (program *Program) run() {
 	var credit_hours uint
 	var grade float32
 
-	for i := 1; i <= 10; i++ {
+	for {
 		program.userIO.print("Enter Menu ID: ")
 		fmt.Scan(&menu)
 
@@ -49,21 +49,17 @@ func (program *Program) run() {
 
 			program.userIO.print("Enter Student Name: ")
 			name = program.userIO.input(name)
-			// name = "test"
 
 			program.userIO.print("Enter Student ID: ")
 			id = program.userIO.input(id)
-			// id = "test"
 
 			program.userIO.print("Enter Student Major: ")
 			major = program.userIO.input(major)
-			// major = "test"
 
 			program.userIO.print("Enter Student age: ")
 			temp_age_string := program.userIO.input(strconv.FormatUint(uint64(age), 10))
 			age_uint64, _ := strconv.ParseUint(temp_age_string, 10, 32)
 			age = uint(age_uint64)
-			// age = 1
 
 			student := program.database.add_student_with_all_params(name, id, major, age)
 
@@ -75,44 +71,42 @@ func (program *Program) run() {
 
 			program.userIO.print("Enter Student ID: ")
 			id = program.userIO.input(id)
-			// id = "123"
 
-			student := program.database.find_student_by_id(id)
+			student, error := program.database.find_student_by_id(id)
 
-			// if error != nil {
-			program.userIO.print("Student\n")
-			program.userIO.print("\tName: " + student.name + "\n")
-			program.userIO.print("\tID: " + student.id + "\n")
-			program.userIO.print("\tMajor: " + student.major + "\n")
-			program.userIO.print("\tAge: " + strconv.FormatUint(uint64(student.age), 10) + "\n")
+			if error != nil {
+				program.userIO.print("Student\n")
+				program.userIO.print("\tName: " + student.name + "\n")
+				program.userIO.print("\tID: " + student.id + "\n")
+				program.userIO.print("\tMajor: " + student.major + "\n")
+				program.userIO.print("\tAge: " + strconv.FormatUint(uint64(student.age), 10) + "\n")
 
-			program.last_student = student
-			program.transaction_executed += 1
-			// } else {
-			// program.userIO.print("Student not found\n")
-			// }
+				program.last_student = student
+				program.transaction_executed += 1
+			} else {
+				program.userIO.print("Student not found\n")
+			}
 		} else if menu == 3 {
 			program.userIO.print("Enter Student Name: ")
 			name = program.userIO.input(name)
 
-			student := program.database.find_student_by_name(name)
+			student, error := program.database.find_student_by_name(name)
 
-			// if error != nil {
-			program.userIO.print("Student\n")
-			program.userIO.print("\tName: " + student.name + "\n")
-			program.userIO.print("\tID: " + student.id + "\n")
-			program.userIO.print("\tMajor: " + student.major + "\n")
-			program.userIO.print("\tAge: " + strconv.FormatUint(uint64(student.age), 10) + "\n")
+			if error != nil {
+				program.userIO.print("Student\n")
+				program.userIO.print("\tName: " + student.name + "\n")
+				program.userIO.print("\tID: " + student.id + "\n")
+				program.userIO.print("\tMajor: " + student.major + "\n")
+				program.userIO.print("\tAge: " + strconv.FormatUint(uint64(student.age), 10) + "\n")
 
-			program.last_student = student
-			program.transaction_executed += 1
-			// } else {
-			// program.userIO.print("Student not found\n")
-			// }
+				program.last_student = student
+				program.transaction_executed += 1
+			} else {
+				program.userIO.print("Student not found\n")
+			}
 		} else if menu == 4 {
 			program.userIO.print("Enter Course Name: ")
 			course_name = program.userIO.input(course_name)
-			// course_name = "test"
 
 			students := program.database.find_students_by_course(course_name)
 			program.userIO.print("[")
@@ -124,21 +118,25 @@ func (program *Program) run() {
 
 		} else if menu == 5 {
 
-			program.userIO.print("Enter Course Name: ")
-			course_name = program.userIO.input(course_name)
+			if program.last_student != nil {
+				program.userIO.print("Enter Course Name: ")
+				course_name = program.userIO.input(course_name)
 
-			program.userIO.print("Enter Course Credit Hours: ")
-			temp_credit_hours_string := program.userIO.input(strconv.FormatUint(uint64(credit_hours), 10))
-			credit_hours_uint64, _ := strconv.ParseUint(temp_credit_hours_string, 10, 32)
-			credit_hours = uint(credit_hours_uint64)
+				program.userIO.print("Enter Course Credit Hours: ")
+				temp_credit_hours_string := program.userIO.input(strconv.FormatUint(uint64(credit_hours), 10))
+				credit_hours_uint64, _ := strconv.ParseUint(temp_credit_hours_string, 10, 32)
+				credit_hours = uint(credit_hours_uint64)
 
-			program.userIO.print("Enter Course Grade: ")
-			temp_grade_string := program.userIO.input(strconv.FormatFloat(float64(grade), 'f', 2, 32))
-			grade_float64, _ := strconv.ParseFloat(temp_grade_string, 32)
-			grade = float32(grade_float64)
+				program.userIO.print("Enter Course Grade: ")
+				temp_grade_string := program.userIO.input(strconv.FormatFloat(float64(grade), 'f', 2, 32))
+				grade_float64, _ := strconv.ParseFloat(temp_grade_string, 32)
+				grade = float32(grade_float64)
 
-			program.last_student.add_course(course_name, credit_hours, grade)
-			program.transaction_executed += 1
+				program.last_student.add_course(course_name, credit_hours, grade)
+				program.transaction_executed += 1
+			} else {
+				program.userIO.print("Search or add student before adding a course\n")
+			}
 
 		} else if menu == 6 {
 			program.userIO.print("Transactions Executed: " + strconv.FormatUint(uint64(program.transaction_executed), 10) + "\n")
