@@ -43,7 +43,7 @@ func (program *Program) run() {
 
 	for {
 
-		program.userIO.print("Select a Menu from the below list: \n")
+		program.userIO.print("\nSelect a Menu from the below list: \n")
 		for key, value := range program_menu {
 			program.userIO.print(strconv.FormatUint(uint64(key), 10) + ". " + value + "\n")
 		}
