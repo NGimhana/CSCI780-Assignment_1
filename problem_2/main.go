@@ -1,13 +1,19 @@
 package main
 
+import (
+	"problem_2/database"
+	"problem_2/program"
+	"problem_2/userIO"
+)
+
 func main() {
 
-	userIO := UserIO{}
-	database := Database{}
+	userIO := userIO.UserIO{}
+	database := database.Database{}
 	database.Database()
 
-	program := Program{}
+	program := program.Program{}
 	program.Program(userIO, database)
 
-	program.run()
+	program.Run()
 }
