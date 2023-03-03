@@ -123,6 +123,7 @@ func (program *Program) Run() {
 				for _, student := range students {
 					program.userIO.Print(student.Name + ",")
 				}
+				program.userIO.Print("\b")
 				program.userIO.Print("]\n")
 				program.transaction_executed += 1
 			} else {
