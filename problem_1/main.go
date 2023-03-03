@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 var ArrayOfNumbers = []uint{2, 7, 15, 11}
-var Sum uint = 20
+var Sum uint = 9
 
 /*
 Time complexity: O(n)
